@@ -1,0 +1,33 @@
+\section{V14 Tomographie mittels Gamma-Strahlung}
+\label{sec:V14}
+
+\begin{itemize}
+    \item Nicht invasive dreidimensionale Untersuchung von Objekten mit Hilfe von Strahlung
+    \item Bestimme Materialien innerhalb eines Metallwürfels mit Hilfe von $^{137}\text{Cs}$
+    \item $^{137}\text{Cs}$ zerfällt mit Halbwertszeit von 30 Jahren über $\beta$-Zerfall
+    \item Hauptsächlich in metastabilen angeregten Zustand, welcher sich bei Halbwertszeit von $\SI{153}{\second}$ und Energie von $\SI{0,662}{\mega\electronvolt}$ abregt
+    \item Bei Durchgang durch Materie Wechselwirkungen mit Hüllenelektronen
+    \item \textbf{Photoeffekt:} vollständige Energieabgabe an Hüllenelektron, sodass dieses $E_\gamma - E_\text{Bindung}$ erhält. Dominant bei Energien unter $\SI{100}{\kilo\electronvolt}$, $\propto Z^5$
+    \item \textbf{Comptonstreuung:} inelastische Streuung an freiem Elektron. Energieabgabe und Ablenkung des Photons. $\propto Z^2$. Dominanten zwischen $\SI{100}{\kilo\electronvolt}$ und $\SI{10}{\mega\electronvolt}$
+    \item \textbf{Paarerzeugung:} ab doppelter Elektronenruhemasse, also $\SI{1,02}{\mega\electronvolt}$. Auslöschung des Photons für $e^+e^-$ unter Abgabe von Energie an Atomkern. Da Energie bei $\SI{0.662}{\mega\electronvolt}$ nicht relevant.
+    \item komplexe Überlagerung aller Effekte, aber insgesamt exponentielle Abnahme der Eingangsintensität:
+        \begin{equation}
+            I = I_0\text{e}^{-\sum\limits_{i}\mu_id_i}
+        \end{equation}
+    \item Dies lässt sich in ein lineares Gleichungssystem umstellen:
+        \begin{equation}
+            \sum\limits_{i}\mu_id_i = \ln\left(\frac{I_0}{I_j}\right)
+        \end{equation}
+    \item Mit $\mu$ als Vektor und $d$ als Geometriematrix lässt sich so eine Regression durchführen
+    \item In einer Schicht also 9 zu bestimmende Teilwürfel, also hat $\mu$ Länge 9
+    \item Matrix hat Dimension von $\mu$ $\times$ Dimension von $\vec{I}$
+    \item Least squares ergibt dann $\mu = (A^TWA)^{-1}(A^TW\vec{I})$
+\end{itemize}
+
+\textbf{Durchführung:}
+\begin{itemize}
+    \item $^137\text{Cs}$-Quelle ($\gamma$-Strahler) auf NaI-Szintillationsdetektor
+    \item Strahlung regt Moleküle an, beim Abregen wird Licht emittiert
+    \item Detektion mit PM und Speichern nach Signalstärke
+    \item 
+\end{itemize}
