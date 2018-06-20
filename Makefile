@@ -1,6 +1,6 @@
 all: latex
 
-latex: FORCE figures/aufspaltung.pdf figures/beispiel.jpg figures/sagnac.pdf| build
+latex: | build
 	@lualatex --halt-on-error --interaction=nonstopmode --output-directory=build --draftmode main.tex
 	@biber build/main.bcf
 	@lualatex --halt-on-error --interaction=nonstopmode --output-directory=build main.tex
@@ -12,6 +12,8 @@ build:
 
 clean:
 	@rm -rf build/
+
+figures: figures/aufspaltung.pdf figures/beispiel.jpg figures/sagnac.pdf
 
 figures/aufspaltung.pdf:
 	wget 'https://github.com/KevSed/Praktikum/raw/master/V21%20Optisches%20Pumpen/figures/Aufspaltung.jpg'
