@@ -1,29 +1,48 @@
-all: latex
+ifeq (,$(shell sh -c 'cygpath --version 2> /dev/null'))
+  # Unix
+  pwd := $$(pwd)
+  translate = $1
+else
+  # Windows mit MSys2/Cygwin
+  pwd := $$(cygpath -m "$$(pwd)")
+  translate = $(shell echo '$1' | sed 's/:/;/g')
+endif
 
-latex: | build
-	@lualatex --halt-on-error --interaction=nonstopmode --output-directory=build --draftmode main.tex
-	@biber build/main.bcf
-	@lualatex --halt-on-error --interaction=nonstopmode --output-directory=build main.tex
+all: FP-Prüfung.pdf
 
-FORCE:
-
-build:
-	@mkdir -p build/
+again:
+	@make clean
+	@make all
 
 clean:
-	@rm -rf build/
+	@rm -rf build
+	@echo 'Entferne build-Ordner'
 
-figures: figures/aufspaltung.pdf figures/beispiel.jpg figures/sagnac.pdf
 
-figures/aufspaltung.pdf:
-	wget 'https://github.com/KevSed/Praktikum/raw/master/V21%20Optisches%20Pumpen/figures/Aufspaltung.jpg'
-	mv Aufspaltung.jpg figures/aufspaltung.jpg
+build:
+	mkdir -p build
 
-figures/beispiel.jpg:
-	wget 'https://raw.githubusercontent.com/KevSed/Praktikum/master/V21%20Optisches%20Pumpen/figures/Beispiel.jpg'
-	mv Beispiel.jpg figures/beispiel.jpg
-
-figures/sagnac.pdf:
-	wget https://github.com/KevSed/Praktikum/raw/master/V64%20Moderne%20Interferometrie/figures/aufbau.pdf
-	mv aufbau.pdf figures/sagnac.pdf
-
+.DELETE_ON_ERROR:
+# hier weitere Abhängigkeiten für build/main.pdf deklarieren:
+FP-Prüfung.pdf: main.tex content/* header.tex literature.bib programs.bib | build
+	@TEXINPUTS="$(call translate,build:)" lualatex \
+		--output-directory=build \
+		--interaction=nonstopmode \
+		--halt-on-error \
+	main.tex|grep -B 12 -e'no output PDF file produced' -e'LuaTeX' --color=auto
+	@echo
+	@BIBINPUTS=build: biber build/main.bcf|grep -i -e'biber' -e'error' -e'warn' --color=auto
+	@echo
+	@lualatex \
+		--output-directory=build \
+		--interaction=nonstopmode \
+		--halt-on-error \
+	main.tex>/dev/null
+	@lualatex \
+		--output-directory=build \
+		--interaction=nonstopmode \
+		--halt-on-error \
+	main.tex|grep  -e'reference' -e'LuaTeX' --color=auto
+	@mv build/main.pdf FP-Prüfung.pdf
+	@make clean
+	@echo Success
